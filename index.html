@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>Cracklab Meditation - Respira, aprende, produce</title>
+    <meta name="description" content="Aplicación de meditación y técnicas de respiración para mejorar tu bienestar y productividad">
+    <meta name="keywords" content="meditación, respiración, pomodoro, bienestar, mindfulness, cracklab">
+    
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Color System */
+            --green: #4ade80;
+            --yellow: #facc15;
+            --red: #f87171;
+            --gold: #fbbf24;
+            
+            /* Light Theme */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-card: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            
+            /* Spacing */
+            --radius: 0.75rem;
+            --spacing: 1rem;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-feature-settings: "rlig" 1, "calt" 1;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 1rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 2rem 0 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--green);
+        }
+
+        .app-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            background-size: 200% 100%;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Settings Bar */
+        .settings-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .settings-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .settings-btn.active {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        .settings-btn:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        /* Card Styles */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        }
+
+        /* Breathing Section */
+        .technique-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            justify-content: center;
+        }
+
+        .technique-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .technique-btn:hover:not(:disabled) {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+            transform: translateY(-1px);
+        }
+
+        .technique-btn.active {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        .technique-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .technique-btn:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        .technique-description {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .session-timer {
+            text-align: center;
+            color: var(--gold);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Breathing Circle */
+        .breathing-circle {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.125rem;
+            font-weight: 700;
+            box-shadow: 0 0 30px rgba(74, 222, 128, 0.3);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .breathing-circle::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--green), var(--yellow), var(--red));
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .breathing-circle.inhale {
+            background: var(--green);
+            transform: scale(1.1);
+        }
+
+        .breathing-circle.hold {
+            background: var(--yellow);
+            transform: scale(1);
+        }
+
+        .breathing-circle.exhale {
+            background: var(--red);
+            transform: scale(0.9);
+        }
+
+        .breathing-circle.pause {
+            background: var(--gold);
+            transform: scale(1.05);
+        }
+
+        .breathing-circle.completion::before {
+            opacity: 1;
+            animation: pulse 1s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        .breathing-phase {
+            text-align: center;
+            z-index: 2;
+            width: 100%;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            border: none;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #22c55e;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-destructive {
+            background: var(--red);
+            color: white;
+        }
+
+        .btn-destructive:hover {
+            background: #ef4444;
+        }
+
+        /* Summary Panel */
+        .summary-panel {
+            text-align: center;
+        }
+
+        .summary-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: bounce-in 0.5s ease-out;
+        }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .summary-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 1rem;
+        }
+
+        .summary-data {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        /* Pomodoro Section */
+        .pomodoro-title {
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--green);
+            margin-bottom: 1rem;
+        }
+
+        .pomodoro-mode {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .pomodoro-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .pomodoro-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            font-family: 'Space Mono', monospace;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pomodoro-circle.work {
+            background: linear-gradient(135deg, var(--yellow) 0%, var(--green) 100%);
+        }
+
+        .pomodoro-circle.break {
+            background: linear-gradient(135deg, var(--green) 0%, var(--yellow) 100%);
+        }
+
+        .pomodoro-circle.completed {
+            animation: pomodoro-complete 1s ease-in-out;
+        }
+
+        @keyframes pomodoro-complete {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring-circle {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.3);
+            stroke-width: 4;
+        }
+
+        .progress-ring-progress {
+            fill: none;
+            stroke: white;
+            stroke-width: 4;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s linear;
+        }
+
+        .pomodoro-controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .pomodoro-settings {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .setting-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .setting-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .setting-input {
+            width: 60px;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 1rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .setting-input:focus {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        .setting-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Instructions Panel */
+        .instructions {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .instructions-title {
+            font-weight: 600;
+            color: var(--green);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .instructions-content {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .device-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .device-indicator.desktop {
+            background: rgba(74, 222, 128, 0.2);
+            color: var(--green);
+        }
+
+        .device-indicator.mobile {
+            background: rgba(250, 204, 21, 0.2);
+            color: var(--yellow);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 640px) {
+            .container {
+                padding: 0.75rem;
+            }
+            
+            .app-title {
+                font-size: 1.25rem;
+            }
+            
+            .breathing-circle {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .pomodoro-circle {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .technique-selector {
+                gap: 0.25rem;
+            }
+            
+            .technique-btn {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.75rem;
+            }
+            
+            .btn {
+                padding: 0.625rem 1.25rem;
+                font-size: 0.875rem;
+            }
+            
+            /* Prevent zoom on iOS */
+            input[type="number"] {
+                font-size: 16px;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus styles for better accessibility */
+        *:focus-visible {
+            outline: 2px solid var(--green);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --border-color: #000000;
+                --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.5);
+            }
+            
+            [data-theme="dark"] {
+                --border-color: #ffffff;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-leaf logo-icon"></i>
+                <h1 class="app-title">Cracklab Meditation</h1>
+            </div>
+            <p class="subtitle">Respira, aprende, produce</p>
+        </header>
+
+        <!-- Instructions Panel -->
+        <div class="instructions">
+            <div class="instructions-title">
+                <i class="fas fa-info-circle"></i>
+                Instrucciones de Uso
+            </div>
+            <div class="device-indicator desktop" id="deviceIndicator">
+                <i class="fas fa-desktop"></i>
+                <span>Modo Escritorio</span>
+            </div>
+            <div class="instructions-content" id="instructionsText">
+                En modo escritorio escucharás sonidos suaves para cada fase de respiración. No necesitas mirar la pantalla.
+            </div>
+        </div>
+
+        <!-- Settings Bar -->
+        <div class="settings-bar">
+            <button class="settings-btn" id="themeToggle" title="Cambiar tema" aria-label="Cambiar tema">
+                <i class="fas fa-sun"></i>
+            </button>
+            <button class="settings-btn active" id="vibrationToggle" title="Vibración" aria-label="Vibración">
+                <i class="fas fa-vibrate"></i>
+            </button>
+            <button class="settings-btn active" id="pomodoroVibrationToggle" title="Vibración Pomodoro" aria-label="Vibración Pomodoro">
+                <i class="fas fa-vibrate"></i>
+            </button>
+            <button class="settings-btn active" id="pomodoroSoundToggle" title="Sonido Pomodoro" aria-label="Sonido Pomodoro">
+                <i class="fas fa-volume-up"></i>
+            </button>
+        </div>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Breathing Section -->
+            <div class="card" id="breathingCard">
+                <div class="technique-selector" id="techniqueSelector"></div>
+                <div class="technique-description" id="techniqueDescription"></div>
+                <div class="session-timer" id="sessionTimer" style="display: none;">Tiempo: 00:00</div>
+                <div class="breathing-circle" id="breathingCircle">
+                    <span class="breathing-phase" id="breathingPhase">INICIO</span>
+                </div>
+                <div class="controls">
+                    <button class="btn btn-primary" id="breathingStart">
+                        <i class="fas fa-play"></i>
+                        Iniciar
+                    </button>
+                    <button class="btn btn-destructive" id="breathingStop" style="display: none;">
+                        <i class="fas fa-stop"></i>
+                        Detener
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Panel (Hidden by default) -->
+            <div class="card summary-panel" id="summaryPanel" style="display: none;">
+                <div class="summary-icon">🎉</div>
+                <h3 class="summary-title">¡Sesión Completada!</h3>
+                <div class="summary-data" id="summaryData"></div>
+                <button class="btn btn-primary" id="newSessionBtn">
+                    <i class="fas fa-redo"></i>
+                    Nueva Sesión
+                </button>
+            </div>
+
+            <!-- Pomodoro Section -->
+            <div class="card">
+                <h2 class="pomodoro-title">Pomodoro</h2>
+                <div class="pomodoro-mode" id="pomodoroMode">Trabajo</div>
+                <div class="pomodoro-container">
+                    <div class="pomodoro-circle work" id="pomodoroCircle">
+                        <span id="pomodoroTime">25:00</span>
+                        <svg class="progress-ring">
+                            <circle class="progress-ring-circle" cx="50" cy="50" r="46"></circle>
+                            <circle class="progress-ring-progress" cx="50" cy="50" r="46" 
+                                    stroke-dasharray="289.026" stroke-dashoffset="289.026"></circle>
+                        </svg>
+                    </div>
+                </div>
+                <div class="pomodoro-controls">
+                    <button class="btn btn-primary" id="pomodoroStart">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn btn-secondary" id="pomodoroPause" style="display: none;">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button class="btn btn-secondary" id="pomodoroSkip" style="display: none;">
+                        <i class="fas fa-forward"></i>
+                    </button>
+                    <button class="btn btn-secondary" id="pomodoroReset">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+                <div class="pomodoro-settings">
+                    <div class="setting-row">
+                        <label class="setting-label" for="workDuration">Trabajo (min)</label>
+                        <input type="number" id="workDuration" class="setting-input" min="10" max="60" value="25">
+                    </div>
+                    <div class="setting-row">
+                        <label class="setting-label" for="breakDuration">Descanso (min)</label>
+                        <input type="number" id="breakDuration" class="setting-input" min="3" max="20" value="5">
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Desarrollado con ❤️ por Cracklab</p>
+        </footer>
+    </div>
+
+    <script>
+        // Breathing Techniques Configuration
+        const breathingTechniques = {
+            focus: { 
+                name: 'Coherencia Cardíaca', 
+                desc: '5.5s Inhala / 5.5s Exhala', 
+                phases: [
+                    { text: 'INHALA', duration: 5.5, type: 'inhale' }, 
+                    { text: 'EXHALA', duration: 5.5, type: 'exhale' }
+                ] 
+            },
+            stress: { 
+                name: 'Respiración Táctica', 
+                desc: '4s Inhala / 4s Mantén / 4s Exhala / 4s Sin aire', 
+                phases: [
+                    { text: 'INHALA', duration: 4, type: 'inhale' }, 
+                    { text: 'MANTENER', duration: 4, type: 'hold' }, 
+                    { text: 'EXHALA', duration: 4, type: 'exhale' }, 
+                    { text: 'SIN AIRE', duration: 4, type: 'pause' }
+                ] 
+            },
+            energy: { 
+                name: 'Rendimiento Deportivo', 
+                desc: '3s Inhala / 2s Mantén / 4s Exhala', 
+                phases: [
+                    { text: 'INHALA', duration: 3, type: 'inhale' }, 
+                    { text: 'MANTENER', duration: 2, type: 'hold' }, 
+                    { text: 'EXHALA', duration: 4, type: 'exhale' }
+                ] 
+            },
+            relax: { 
+                name: 'Balance Fisiológico', 
+                desc: '4s Inhala / 2s Sin aire / 6s Exhala', 
+                phases: [
+                    { text: 'INHALA', duration: 4, type: 'inhale' }, 
+                    { text: 'SIN AIRE', duration: 2, type: 'pause' }, 
+                    { text: 'EXHALA', duration: 6, type: 'exhale' }
+                ] 
+            },
+            anxiety: { 
+                name: 'Control de Ansiedad (4-7-8)', 
+                desc: '4s Inhala / 7s Mantén / 8s Exhala', 
+                phases: [
+                    { text: 'INHALA', duration: 4, type: 'inhale' }, 
+                    { text: 'MANTENER', duration: 7, type: 'hold' }, 
+                    { text: 'EXHALA', duration: 8, type: 'exhale' }
+                ] 
+            },
+            digest: { 
+                name: 'Digestión', 
+                desc: '3s Inhala / 6s Exhala', 
+                phases: [
+                    { text: 'INHALA', duration: 3, type: 'inhale' }, 
+                    { text: 'EXHALA', duration: 6, type: 'exhale' }
+                ] 
+            },
+            sleep: { 
+                name: 'Sueño Profundo', 
+                desc: '4s Inhala / 7s Mantén / 8s Exhala', 
+                phases: [
+                    { text: 'INHALA', duration: 4, type: 'inhale' }, 
+                    { text: 'MANTENER', duration: 7, type: 'hold' }, 
+                    { text: 'EXHALA', duration: 8, type: 'exhale' }
+                ] 
+            },
+            prep: { 
+                name: 'Preparación Mental', 
+                desc: '4s Inhala / 4s Mantén / 4s Exhala / 4s Sin aire', 
+                phases: [
+                    { text: 'INHALA', duration: 4, type: 'inhale' }, 
+                    { text: 'MANTENER', duration: 4, type: 'hold' }, 
+                    { text: 'EXHALA', duration: 4, type: 'exhale' }, 
+                    { text: 'SIN AIRE', duration: 4, type: 'pause' }
+                ] 
+            },
+            recovery: { 
+                name: 'Recuperación Física', 
+                desc: '6s Inhala / 2s Mantén / 8s Exhala', 
+                phases: [
+                    { text: 'INHALA', duration: 6, type: 'inhale' }, 
+                    { text: 'MANTENER', duration: 2, type: 'hold' }, 
+                    { text: 'EXHALA', duration: 8, type: 'exhale' }
+                ] 
+            },
+            fatigue: { 
+                name: 'Despertar Mental', 
+                desc: '2s Inhala / 2s Exhala (1 min)', 
+                phases: [
+                    { text: 'INHALA', duration: 2, type: 'inhale' }, 
+                    { text: 'EXHALA', duration: 2, type: 'exhale' }
+                ] 
+            }
+        };
+
+        const breathingStates = [
+            { key: 'focus', label: 'Enfoque' },
+            { key: 'stress', label: 'Estrés' },
+            { key: 'energy', label: 'Energía' },
+            { key: 'relax', label: 'Relajación' },
+            { key: 'anxiety', label: 'Ansiedad' },
+            { key: 'digest', label: 'Después de Comer' },
+            { key: 'sleep', label: 'Sueño' },
+            { key: 'prep', label: 'Prepararse' },
+            { key: 'recovery', label: 'Recuperación' },
+            { key: 'fatigue', label: 'Fatiga Mental' }
+        ];
+
+        // Application State
+        class MeditationApp {
+            constructor() {
+                this.settings = this.loadSettings();
+                this.state = {
+                    isBreathingActive: false,
+                    currentTechnique: 'focus',
+                    breathingPhase: 0,
+                    sessionStartTime: null,
+                    sessionCycles: 0,
+                    sessionElapsed: 0,
+                    isPomodoroActive: false,
+                    pomodoroState: 'work',
+                    pomodoroTimeLeft: 25 * 60
+                };
+                
+                this.timers = {
+                    breathing: null,
+                    session: null,
+                    pomodoro: null
+                };
+                
+                this.audioContext = null;
+                this.isDesktop = this.detectDesktop();
+                this.initializeElements();
+                this.bindEvents();
+                this.initializeUI();
+                this.initializeAudio();
+                this.updateDeviceInstructions();
+            }
+
+            // Detect if device is desktop
+            detectDesktop() {
+                const userAgent = navigator.userAgent.toLowerCase();
+                const isMobile = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+                const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                const screenWidth = window.screen.width;
+                const screenHeight = window.screen.height;
+                
+                return !isMobile && (!hasTouch || (screenWidth >= 1024 && screenHeight >= 768));
+            }
+
+            // Update device-specific instructions
+            updateDeviceInstructions() {
+                const deviceIndicator = document.getElementById('deviceIndicator');
+                const instructionsText = document.getElementById('instructionsText');
+                
+                if (this.isDesktop) {
+                    deviceIndicator.className = 'device-indicator desktop';
+                    deviceIndicator.innerHTML = '<i class="fas fa-desktop"></i><span>Modo Escritorio</span>';
+                    instructionsText.textContent = 'En modo escritorio escucharás sonidos suaves para cada fase de respiración. No necesitas mirar la pantalla.';
+                } else {
+                    deviceIndicator.className = 'device-indicator mobile';
+                    deviceIndicator.innerHTML = '<i class="fas fa-mobile-alt"></i><span>Modo Móvil</span>';
+                    instructionsText.textContent = 'En modo móvil sentirás vibraciones suaves para cada fase de respiración. No necesitas mirar la pantalla.';
+                }
+            }
+
+            // Load settings from localStorage
+            loadSettings() {
+                const defaultSettings = {
+                    darkMode: true,
+                    vibrationEnabled: true,
+                    pomodoroVibrationEnabled: true,
+                    pomodoroSoundEnabled: true,
+                    workDuration: 25,
+                    breakDuration: 5
+                };
+                
+                try {
+                    const saved = localStorage.getItem('meditationSettings');
+                    return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings;
+                } catch (e) {
+                    return defaultSettings;
+                }
+            }
+
+            // Save settings to localStorage
+            saveSettings() {
+                try {
+                    localStorage.setItem('meditationSettings', JSON.stringify(this.settings));
+                } catch (e) {
+                    console.warn('Failed to save settings:', e);
+                }
+            }
+
+            // Initialize DOM elements
+            initializeElements() {
+                this.elements = {
+                    // Theme and settings
+                    themeToggle: document.getElementById('themeToggle'),
+                    vibrationToggle: document.getElementById('vibrationToggle'),
+                    pomodoroVibrationToggle: document.getElementById('pomodoroVibrationToggle'),
+                    pomodoroSoundToggle: document.getElementById('pomodoroSoundToggle'),
+                    
+                    // Breathing elements
+                    techniqueSelector: document.getElementById('techniqueSelector'),
+                    techniqueDescription: document.getElementById('techniqueDescription'),
+                    breathingCircle: document.getElementById('breathingCircle'),
+                    breathingPhase: document.getElementById('breathingPhase'),
+                    sessionTimer: document.getElementById('sessionTimer'),
+                    breathingStart: document.getElementById('breathingStart'),
+                    breathingStop: document.getElementById('breathingStop'),
+                    
+                    // Summary elements
+                    summaryPanel: document.getElementById('summaryPanel'),
+                    summaryData: document.getElementById('summaryData'),
+                    newSessionBtn: document.getElementById('newSessionBtn'),
+                    
+                    // Pomodoro elements
+                    pomodoroMode: document.getElementById('pomodoroMode'),
+                    pomodoroCircle: document.getElementById('pomodoroCircle'),
+                    pomodoroTime: document.getElementById('pomodoroTime'),
+                    pomodoroStart: document.getElementById('pomodoroStart'),
+                    pomodoroPause: document.getElementById('pomodoroPause'),
+                    pomodoroSkip: document.getElementById('pomodoroSkip'),
+                    pomodoroReset: document.getElementById('pomodoroReset'),
+                    workDuration: document.getElementById('workDuration'),
+                    breakDuration: document.getElementById('breakDuration'),
+                    progressRing: document.querySelector('.progress-ring-progress')
+                };
+            }
+
+            // Initialize Web Audio API
+            initializeAudio() {
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                } catch (e) {
+                    console.warn('Web Audio API not supported:', e);
+                }
+            }
+
+            // Play breathing phase sound (Desktop only)
+            playBreathingPhaseSound(phase) {
+                if (!this.audioContext || !this.isDesktop) return;
+                
+                try {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    // Different frequencies for different phases
+                    let freq = 800;
+                    let oscType = 'sine';
+                    let duration = 0.2;
+
+                    switch (phase) {
+                        case 'inhale':
+                            freq = 523.25; // C5 - gentle, uplifting
+                            oscType = 'sine';
+                            duration = 0.3;
+                            break;
+                        case 'hold':
+                            freq = 659.25; // E5 - stable, maintaining
+                            oscType = 'triangle';
+                            duration = 0.2;
+                            break;
+                        case 'exhale':
+                            freq = 392.00; // G4 - calming, releasing
+                            oscType = 'sine';
+                            duration = 0.4;
+                            break;
+                        case 'pause':
+                            freq = 293.66; // D4 - neutral, waiting
+                            oscType = 'triangle';
+                            duration = 0.15;
+                            break;
+                    }
+
+                    oscillator.frequency.value = freq;
+                    oscillator.type = oscType;
+
+                    // Create a gentle envelope for meditation
+                    gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                    gainNode.gain.linearRampToValueAtTime(0.2, this.audioContext.currentTime + 0.05);
+                    gainNode.gain.linearRampToValueAtTime(0.1, this.audioContext.currentTime + duration * 0.7);
+                    gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + duration);
+
+                    oscillator.start(this.audioContext.currentTime);
+                    oscillator.stop(this.audioContext.currentTime + duration);
+                } catch (e) {
+                    console.warn('Failed to play breathing phase sound:', e);
+                }
+            }
+
+            // Play session start sound (Desktop only)
+            playSessionStartSound() {
+                if (!this.audioContext || !this.isDesktop) return;
+                
+                try {
+                    // Play a gentle ascending chime
+                    const frequencies = [440, 554.37, 659.25]; // A4, C#5, E5
+                    
+                    frequencies.forEach((freq, i) => {
+                        setTimeout(() => {
+                            const oscillator = this.audioContext.createOscillator();
+                            const gainNode = this.audioContext.createGain();
+
+                            oscillator.connect(gainNode);
+                            gainNode.connect(this.audioContext.destination);
+
+                            oscillator.frequency.value = freq;
+                            oscillator.type = 'sine';
+
+                            gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.15, this.audioContext.currentTime + 0.1);
+                            gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.6);
+
+                            oscillator.start(this.audioContext.currentTime);
+                            oscillator.stop(this.audioContext.currentTime + 0.6);
+                        }, i * 150);
+                    });
+                } catch (e) {
+                    console.warn('Failed to play session start sound:', e);
+                }
+            }
+
+            // Play session complete sound
+            playSessionCompleteSound() {
+                if (!this.audioContext) return;
+                
+                try {
+                    // Play a peaceful descending chime
+                    const frequencies = [659.25, 554.37, 440, 329.63]; // E5, C#5, A4, E4
+                    
+                    frequencies.forEach((freq, i) => {
+                        setTimeout(() => {
+                            const oscillator = this.audioContext.createOscillator();
+                            const gainNode = this.audioContext.createGain();
+
+                            oscillator.connect(gainNode);
+                            gainNode.connect(this.audioContext.destination);
+
+                            oscillator.frequency.value = freq;
+                            oscillator.type = 'sine';
+
+                            gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.2, this.audioContext.currentTime + 0.1);
+                            gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.8);
+
+                            oscillator.start(this.audioContext.currentTime);
+                            oscillator.stop(this.audioContext.currentTime + 0.8);
+                        }, i * 200);
+                    });
+                } catch (e) {
+                    console.warn('Failed to play session complete sound:', e);
+                }
+            }
+
+            // Play Pomodoro beep
+            playPomodoroBeep() {
+                if (!this.audioContext || !this.settings.pomodoroSoundEnabled) return;
+                
+                try {
+                    const frequencies = [600, 800, 1000];
+                    
+                    frequencies.forEach((freq, i) => {
+                        setTimeout(() => {
+                            const oscillator = this.audioContext.createOscillator();
+                            const gainNode = this.audioContext.createGain();
+
+                            oscillator.connect(gainNode);
+                            gainNode.connect(this.audioContext.destination);
+
+                            oscillator.frequency.value = freq;
+                            oscillator.type = 'sine';
+
+                            gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+                            gainNode.gain.linearRampToValueAtTime(0.3, this.audioContext.currentTime + 0.01);
+                            gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.15);
+
+                            oscillator.start(this.audioContext.currentTime);
+                            oscillator.stop(this.audioContext.currentTime + 0.15);
+                        }, i * 200);
+                    });
+                } catch (e) {
+                    console.warn('Failed to play Pomodoro beep:', e);
+                }
+            }
+
+            // Vibrate device
+            vibrate(pattern) {
+                if (!this.settings.vibrationEnabled || !navigator.vibrate) return;
+                try {
+                    navigator.vibrate(pattern);
+                } catch (e) {
+                    console.warn('Vibration failed:', e);
+                }
+            }
+
+            // Vibrate for breathing phases (Mobile only)
+            vibrateForBreathingPhase(phase) {
+                if (!this.settings.vibrationEnabled || !navigator.vibrate || this.isDesktop) return;
+
+                switch (phase) {
+                    case 'inhale':
+                        // Gentle ascending vibration for inhale
+                        this.vibrate([30, 50, 60]);
+                        break;
+                    case 'hold':
+                        // Short steady vibration for hold
+                        this.vibrate(40);
+                        break;
+                    case 'exhale':
+                        // Gentle descending vibration for exhale
+                        this.vibrate([60, 50, 30]);
+                        break;
+                    case 'pause':
+                        // Very subtle double pulse for pause
+                        this.vibrate([20, 100, 20]);
+                        break;
+                }
+            }
+
+            // Vibrate for session start (Mobile only)
+            vibrateForSessionStart() {
+                if (!this.settings.vibrationEnabled || !navigator.vibrate || this.isDesktop) return;
+                // Gentle ascending pattern to signal session start
+                this.vibrate([20, 100, 30, 100, 40]);
+            }
+
+            // Vibrate for session complete (Mobile only)
+            vibrateForSessionComplete() {
+                if (!this.settings.vibrationEnabled || !navigator.vibrate || this.isDesktop) return;
+                // Peaceful descending pattern to signal session completion
+                this.vibrate([40, 100, 30, 100, 20, 200]);
+            }
+
+            // Bind event listeners
+            bindEvents() {
+                // Settings toggles
+                this.elements.themeToggle.addEventListener('click', () => this.toggleTheme());
+                this.elements.vibrationToggle.addEventListener('click', () => this.toggleVibration());
+                this.elements.pomodoroVibrationToggle.addEventListener('click', () => this.togglePomodoroVibration());
+                this.elements.pomodoroSoundToggle.addEventListener('click', () => this.togglePomodoroSound());
+                
+                // Breathing controls
+                this.elements.breathingStart.addEventListener('click', () => this.startBreathing());
+                this.elements.breathingStop.addEventListener('click', () => this.stopBreathing());
+                this.elements.newSessionBtn.addEventListener('click', () => this.newSession());
+                
+                // Pomodoro controls
+                this.elements.pomodoroStart.addEventListener('click', () => this.startPomodoro());
+                this.elements.pomodoroPause.addEventListener('click', () => this.pausePomodoro());
+                this.elements.pomodoroSkip.addEventListener('click', () => this.skipPomodoro());
+                this.elements.pomodoroReset.addEventListener('click', () => this.resetPomodoro());
+                
+                // Pomodoro settings
+                this.elements.workDuration.addEventListener('change', (e) => this.updateWorkDuration(e.target.value));
+                this.elements.breakDuration.addEventListener('change', (e) => this.updateBreakDuration(e.target.value));
+                
+                // Handle visibility change for performance
+                document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
+                
+                // Initialize audio context on first user interaction
+                document.addEventListener('click', () => {
+                    if (this.audioContext && this.audioContext.state === 'suspended') {
+                        this.audioContext.resume();
+                    }
+                }, { once: true });
+            }
+
+            // Initialize UI
+            initializeUI() {
+                // Set theme
+                this.setTheme(this.settings.darkMode);
+                
+                // Set breathing techniques
+                this.renderTechniques();
+                this.selectTechnique('focus');
+                
+                // Set pomodoro settings
+                this.elements.workDuration.value = this.settings.workDuration;
+                this.elements.breakDuration.value = this.settings.breakDuration;
+                
+                // Update settings UI
+                this.updateSettingsUI();
+            }
+
+            // Render breathing technique buttons
+            renderTechniques() {
+                this.elements.techniqueSelector.innerHTML = '';
+                breathingStates.forEach(({ key, label }) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'technique-btn';
+                    btn.textContent = label;
+                    btn.onclick = () => this.selectTechnique(key);
+                    if (key === this.state.currentTechnique) {
+                        btn.classList.add('active');
+                    }
+                    this.elements.techniqueSelector.appendChild(btn);
+                });
+            }
+
+            // Select breathing technique
+            selectTechnique(technique) {
+                this.state.currentTechnique = technique;
+                this.state.breathingPhase = 0;
+                
+                // Update UI
+                this.renderTechniques();
+                const tech = breathingTechniques[technique];
+                this.elements.techniqueDescription.textContent = `${tech.name} (${tech.desc})`;
+                this.elements.breathingCircle.className = 'breathing-circle';
+                this.elements.breathingPhase.textContent = 'INICIO';
+                this.elements.sessionTimer.style.display = 'none';
+                this.elements.breathingStart.style.display = 'flex';
+                this.elements.breathingStop.style.display = 'none';
+            }
+
+            // Start breathing session
+            startBreathing() {
+                if (this.state.isBreathingActive) return;
+                
+                this.state.isBreathingActive = true;
+                this.state.sessionStartTime = Date.now();
+                this.state.sessionCycles = 0;
+                this.state.sessionElapsed = 0;
+                this.state.breathingPhase = 0;
+                
+                // Update UI
+                this.elements.breathingStart.style.display = 'none';
+                this.elements.breathingStop.style.display = 'flex';
+                this.elements.sessionTimer.style.display = 'block';
+                this.elements.techniqueSelector.querySelectorAll('button').forEach(btn => {
+                    btn.disabled = true;
+                });
+                
+                // Start session timer
+                this.timers.session = setInterval(() => {
+                    this.state.sessionElapsed = Math.floor((Date.now() - this.state.sessionStartTime) / 1000);
+                    this.updateSessionTimer();
+                }, 1000);
+                
+                // Play session start feedback
+                this.playSessionStartSound();
+                this.vibrateForSessionStart();
+                
+                // Start breathing animation
+                this.startBreathingAnimation();
+            }
+
+            // Start breathing animation
+            startBreathingAnimation() {
+                let phaseStartTime = null;
+                
+                const animate = (timestamp) => {
+                    if (!this.state.isBreathingActive) return;
+                    
+                    const technique = breathingTechniques[this.state.currentTechnique];
+                    const phase = technique.phases[this.state.breathingPhase];
+                    
+                    if (!phaseStartTime) {
+                        phaseStartTime = timestamp;
+                        this.updateBreathingPhase(phase);
+                        
+                        // Play phase change feedback
+                        this.playBreathingPhaseSound(phase.type);
+                        this.vibrateForBreathingPhase(phase.type);
+                    }
+                    
+                    const elapsed = (timestamp - phaseStartTime) / 1000;
+                    
+                    if (elapsed >= phase.duration) {
+                        // Move to next phase
+                        this.state.breathingPhase = (this.state.breathingPhase + 1) % technique.phases.length;
+                        
+                        if (this.state.breathingPhase === 0) {
+                            this.state.sessionCycles++;
+                        }
+                        
+                        phaseStartTime = timestamp;
+                        const nextPhase = technique.phases[this.state.breathingPhase];
+                        this.updateBreathingPhase(nextPhase);
+                        
+                        // Play phase change feedback
+                        this.playBreathingPhaseSound(nextPhase.type);
+                        this.vibrateForBreathingPhase(nextPhase.type);
+                    }
+                    
+                    this.timers.breathing = requestAnimationFrame(animate);
+                };
+                
+                this.timers.breathing = requestAnimationFrame(animate);
+            }
+
+            // Update breathing phase UI
+            updateBreathingPhase(phase) {
+                this.elements.breathingCircle.className = `breathing-circle ${phase.type}`;
+                this.elements.breathingPhase.textContent = phase.text;
+            }
+
+            // Stop breathing session
+            stopBreathing() {
+                this.state.isBreathingActive = false;
+                
+                // Clear timers
+                if (this.timers.breathing) {
+                    cancelAnimationFrame(this.timers.breathing);
+                }
+                if (this.timers.session) {
+                    clearInterval(this.timers.session);
+                }
+                
+                // Update UI
+                this.elements.breathingStart.style.display = 'flex';
+                this.elements.breathingStop.style.display = 'none';
+                this.elements.techniqueSelector.querySelectorAll('button').forEach(btn => {
+                    btn.disabled = false;
+                });
+                
+                // Show completion animation
+                this.elements.breathingCircle.classList.add('completion');
+                
+                // Play completion feedback
+                this.playSessionCompleteSound();
+                this.vibrateForSessionComplete();
+                
+                // Show summary after animation
+                setTimeout(() => {
+                    this.showSummary();
+                }, 1000);
+            }
+
+            // Update session timer display
+            updateSessionTimer() {
+                const minutes = Math.floor(this.state.sessionElapsed / 60).toString().padStart(2, '0');
+                const seconds = (this.state.sessionElapsed % 60).toString().padStart(2, '0');
+                this.elements.sessionTimer.textContent = `Tiempo: ${minutes}:${seconds}`;
+            }
+
+            // Show session summary
+            showSummary() {
+                const technique = breathingTechniques[this.state.currentTechnique];
+                const summary = `
+                    <strong>Ejercicio:</strong> ${technique.name}<br>
+                    <strong>Ciclos realizados:</strong> ${this.state.sessionCycles}<br>
+                    <strong>Tiempo total:</strong> ${this.formatTime(this.state.sessionElapsed)}
+                `;
+                
+                this.elements.summaryData.innerHTML = summary;
+                this.elements.breathingCard.style.display = 'none';
+                this.elements.summaryPanel.style.display = 'block';
+            }
+
+            // Start new session
+            newSession() {
+                this.elements.breathingCard.style.display = 'block';
+                this.elements.summaryPanel.style.display = 'none';
+                this.elements.breathingCircle.classList.remove('completion');
+                this.selectTechnique(this.state.currentTechnique);
+            }
+
+            // Format time as MM:SS
+            formatTime(seconds) {
+                const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                return `${mins}:${secs}`;
+            }
+
+            // Toggle theme
+            toggleTheme() {
+                this.settings.darkMode = !this.settings.darkMode;
+                this.setTheme(this.settings.darkMode);
+                this.saveSettings();
+                this.updateSettingsUI();
+                this.vibrate(20);
+            }
+
+            // Set theme
+            setTheme(dark) {
+                if (dark) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    this.elements.themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    this.elements.themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            }
+
+            // Toggle vibration
+            toggleVibration() {
+                this.settings.vibrationEnabled = !this.settings.vibrationEnabled;
+                this.saveSettings();
+                this.updateSettingsUI();
+                this.vibrate(20);
+            }
+
+            // Toggle Pomodoro vibration
+            togglePomodoroVibration() {
+                this.settings.pomodoroVibrationEnabled = !this.settings.pomodoroVibrationEnabled;
+                this.saveSettings();
+                this.updateSettingsUI();
+                this.vibrate(20);
+            }
+
+            // Toggle Pomodoro sound
+            togglePomodoroSound() {
+                this.settings.pomodoroSoundEnabled = !this.settings.pomodoroSoundEnabled;
+                this.saveSettings();
+                this.updateSettingsUI();
+                this.vibrate(20);
+            }
+
+            // Update settings UI
+            updateSettingsUI() {
+                this.elements.vibrationToggle.classList.toggle('active', this.settings.vibrationEnabled);
+                this.elements.pomodoroVibrationToggle.classList.toggle('active', this.settings.pomodoroVibrationEnabled);
+                this.elements.pomodoroSoundToggle.classList.toggle('active', this.settings.pomodoroSoundEnabled);
+            }
+
+            // Start Pomodoro
+            startPomodoro() {
+                if (this.state.isPomodoroActive) return;
+                
+                this.state.isPomodoroActive = true;
+                
+                // Update UI
+                this.elements.pomodoroStart.style.display = 'none';
+                this.elements.pomodoroPause.style.display = 'flex';
+                this.elements.pomodoroSkip.style.display = 'flex';
+                this.elements.workDuration.disabled = true;
+                this.elements.breakDuration.disabled = true;
+                
+                // Start timer
+                const endTime = Date.now() + this.state.pomodoroTimeLeft * 1000;
+                this.timers.pomodoro = setInterval(() => {
+                    this.state.pomodoroTimeLeft = Math.max(0, Math.ceil((endTime - Date.now()) / 1000));
+                    this.updatePomodoroDisplay();
+                    
+                    if (this.state.pomodoroTimeLeft <= 0) {
+                        this.completePomodoroCycle();
+                    }
+                }, 1000);
+                
+                this.vibrate(20);
+            }
+
+            // Pause Pomodoro
+            pausePomodoro() {
+                this.state.isPomodoroActive = false;
+                
+                if (this.timers.pomodoro) {
+                    clearInterval(this.timers.pomodoro);
+                }
+                
+                // Update UI
+                this.elements.pomodoroStart.style.display = 'flex';
+                this.elements.pomodoroPause.style.display = 'none';
+                this.elements.pomodoroSkip.style.display = 'none';
+                
+                this.vibrate(20);
+            }
+
+            // Skip Pomodoro
+            skipPomodoro() {
+                this.completePomodoroCycle();
+                this.vibrate(20);
+            }
+
+            // Reset Pomodoro
+            resetPomodoro() {
+                this.state.isPomodoroActive = false;
+                
+                if (this.timers.pomodoro) {
+                    clearInterval(this.timers.pomodoro);
+                }
+                
+                this.state.pomodoroState = 'work';
+                this.state.pomodoroTimeLeft = this.settings.workDuration * 60;
+                
+                // Update UI
+                this.elements.pomodoroStart.style.display = 'flex';
+                this.elements.pomodoroPause.style.display = 'none';
+                this.elements.pomodoroSkip.style.display = 'none';
+                this.elements.workDuration.disabled = false;
+                this.elements.breakDuration.disabled = false;
+                
+                this.updatePomodoroDisplay();
+                this.vibrate(20);
+            }
+
+            // Complete Pomodoro cycle
+            completePomodoroCycle() {
+                if (this.timers.pomodoro) {
+                    clearInterval(this.timers.pomodoro);
+                }
+                
+                // Show completion animation
+                this.elements.pomodoroCircle.classList.add('completed');
+                this.elements.pomodoroTime.textContent = '✓';
+                
+                // Play completion feedback
+                this.playPomodoroBeep();
+                if (this.settings.pomodoroVibrationEnabled) {
+                    this.vibrate([100, 60, 100]);
+                }
+                
+                // Switch to next phase after animation
+                setTimeout(() => {
+                    this.elements.pomodoroCircle.classList.remove('completed');
+                    this.state.pomodoroState = this.state.pomodoroState === 'work' ? 'break' : 'work';
+                    this.state.pomodoroTimeLeft = (this.state.pomodoroState === 'work' ? 
+                        this.settings.workDuration : this.settings.breakDuration) * 60;
+                    
+                    this.state.isPomodoroActive = false;
+                    
+                    // Update UI
+                    this.elements.pomodoroStart.style.display = 'flex';
+                    this.elements.pomodoroPause.style.display = 'none';
+                    this.elements.pomodoroSkip.style.display = 'none';
+                    this.elements.workDuration.disabled = false;
+                    this.elements.breakDuration.disabled = false;
+                    
+                    this.updatePomodoroDisplay();
+                }, 1000);
+            }
+
+            // Update Pomodoro display
+            updatePomodoroDisplay() {
+                this.elements.pomodoroTime.textContent = this.formatTime(this.state.pomodoroTimeLeft);
+                this.elements.pomodoroMode.textContent = this.state.pomodoroState === 'work' ? 'Trabajo' : 'Descanso';
+                this.elements.pomodoroCircle.className = `pomodoro-circle ${this.state.pomodoroState}`;
+                
+                // Update progress ring
+                const totalDuration = this.state.pomodoroState === 'work' ? 
+                    this.settings.workDuration * 60 : this.settings.breakDuration * 60;
+                const progress = ((totalDuration - this.state.pomodoroTimeLeft) / totalDuration) * 289.026;
+                this.elements.progressRing.style.strokeDashoffset = 289.026 - progress;
+            }
+
+            // Update work duration
+            updateWorkDuration(value) {
+                const duration = Math.max(10, Math.min(60, parseInt(value) || 25));
+                this.settings.workDuration = duration;
+                this.elements.workDuration.value = duration;
+                
+                if (this.state.pomodoroState === 'work' && !this.state.isPomodoroActive) {
+                    this.state.pomodoroTimeLeft = duration * 60;
+                    this.updatePomodoroDisplay();
+                }
+                
+                this.saveSettings();
+            }
+
+            // Update break duration
+            updateBreakDuration(value) {
+                const duration = Math.max(3, Math.min(20, parseInt(value) || 5));
+                this.settings.breakDuration = duration;
+                this.elements.breakDuration.value = duration;
+                
+                if (this.state.pomodoroState === 'break' && !this.state.isPomodoroActive) {
+                    this.state.pomodoroTimeLeft = duration * 60;
+                    this.updatePomodoroDisplay();
+                }
+                
+                this.saveSettings();
+            }
+
+            // Handle visibility change for performance
+            handleVisibilityChange() {
+                if (document.hidden) {
+                    // Pause timers when tab is not visible
+                    if (this.state.isBreathingActive) {
+                        this.stopBreathing();
+                    }
+                    if (this.state.isPomodoroActive) {
+                        this.pausePomodoro();
+                    }
+                }
+            }
+        }
+
+        // Initialize app when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            new MeditationApp();
+        });
+    </script>
+</body>
+</html>
